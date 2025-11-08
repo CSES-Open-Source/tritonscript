@@ -84,7 +84,6 @@ This will install:
 - Express.js (web framework)
 - Mongoose (MongoDB ODM)
 - AWS SDK (for S3)
-- JWT libraries (authentication)
 - TypeScript and development tools
 
 **Expected output:** You should see a progress bar and "added XXX packages" message.
@@ -259,12 +258,6 @@ Once logged into the AWS Console, you need to create your own access keys for th
    MONGO_URI=mongodb://localhost:27017/tritonscript
    # OR for MongoDB Atlas:
    # MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/tritonscript
-   
-   # JWT Configuration
-   JWT_SECRET=your_super_secure_jwt_secret_key_change_this_in_production
-   JWT_EXPIRES_IN=7d
-   JWT_REFRESH_SECRET=your_super_secure_refresh_token_secret_change_this_in_production
-   JWT_REFRESH_EXPIRES_IN=30d
    
    # AWS S3 Configuration (Get these from Kabir or team documentation)
    AWS_ACCESS_KEY_ID=AKIA...get_from_kabir
@@ -639,16 +632,6 @@ PORT=5006
 
 ---
 
-### Issue 5: "JWT_SECRET is not defined"
-
-**Problem:** Missing JWT configuration
-
-**Solution:**
-- Make sure your `.env` file exists in the `backend` directory
-- Verify `JWT_SECRET` is set in the `.env` file
-- Restart the server after updating `.env`
-
----
 
 ### Issue 6: TypeScript compilation errors
 
@@ -675,10 +658,6 @@ npm run build
 | `PORT` | No | Server port number | `5005` |
 | `NODE_ENV` | No | Environment mode | `development` or `production` |
 | `MONGO_URI` | **Yes** | MongoDB connection string | `mongodb://localhost:27017/tritonscript` |
-| `JWT_SECRET` | **Yes** | Secret key for JWT tokens | Random 64-character string |
-| `JWT_EXPIRES_IN` | No | JWT token expiration | `7d` (7 days) |
-| `JWT_REFRESH_SECRET` | **Yes** | Secret for refresh tokens | Random 64-character string |
-| `JWT_REFRESH_EXPIRES_IN` | No | Refresh token expiration | `30d` (30 days) |
 | `AWS_ACCESS_KEY_ID` | **Yes** | AWS access key (from Kabir) | `AKIA...` |
 | `AWS_SECRET_ACCESS_KEY` | **Yes** | AWS secret key (from Kabir) | Long random string |
 | `AWS_REGION` | No | AWS region for S3 | `us-west-1` |
@@ -736,9 +715,6 @@ npm run build
 # Start production server
 npm start
 
-# Generate a JWT secret
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-
 # Check if MongoDB is running (macOS)
 brew services list | grep mongodb
 
@@ -755,7 +731,6 @@ lsof -i :5005
 
 - **Never commit your `.env` file** - It's already in `.gitignore`
 - **Never share your AWS credentials** - Keep them secret
-- **Use strong JWT secrets** - Generate random strings, don't use simple passwords
 - **Rotate credentials regularly** - Especially for production
 - **Use environment-specific configs** - Different credentials for dev/staging/production
 
