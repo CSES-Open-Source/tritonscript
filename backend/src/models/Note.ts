@@ -6,7 +6,7 @@ export interface INote extends Document {
   classNumber: string;
   instructorName?: string;
   quarter: string;
-  ownerId: mongoose.Types.ObjectId;
+  ownerId: mongoose.Types.ObjectId | string; // Allow string for testing without auth
   s3Bucket: string;
   s3Key: string;
   fileSize: number;
@@ -20,7 +20,7 @@ const NoteSchema = new Schema<INote>({
   classNumber: { type: String, required: true, trim: true },
   instructorName: { type: String, trim: true },
   quarter: { type: String, required: true },
-  ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  ownerId: { type: Schema.Types.Mixed, required: true, index: true }, // Mixed type to allow string for testing
   s3Bucket: { type: String, required: true },
   s3Key: { type: String, required: true, unique: true },
   fileSize: { type: Number, required: true }

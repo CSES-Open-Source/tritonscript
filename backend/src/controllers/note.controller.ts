@@ -16,13 +16,8 @@ export const getUploadUrl = async (req: AuthRequest, res: Response): Promise<voi
   try {
     const { fileName, title, className, classNumber, instructorName, quarter } = req.body;
     
-    // Check if user is authenticated (should always be true due to middleware)
-    if (!req.user) {
-      res.status(401).json({ message: 'User not authenticated' });
-      return;
-    }
-    
-    const userId = req.user._id.toString();
+    // Use testuser as default for testing without auth
+    const userId = 'testuser';
     
     // Validate required fields
     if (!fileName || !title || !className || !classNumber || !quarter) {
@@ -50,7 +45,7 @@ export const getUploadUrl = async (req: AuthRequest, res: Response): Promise<voi
     
     const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 900 }); // 15 minutes
     
-    console.log(`Generated upload URL for user: ${req.user.ucsdEmail}`);
+    console.log(`Generated upload URL for testing (no auth)`);
     
     res.status(200).json({ 
       uploadUrl, 
@@ -70,12 +65,8 @@ export const createNote = async (req: AuthRequest, res: Response): Promise<void>
     try {
       const { title, className, classNumber, instructorName, quarter, s3Key, fileSize } = req.body;
       
-      if (!req.user) {
-        res.status(401).json({ message: 'User not authenticated' });
-        return;
-      }
-      
-      const userId = req.user._id.toString();
+      // Use testuser as default for testing without auth
+      const userId = 'testuser';
       
       // Validate required fields
       if (!title || !className || !classNumber || !quarter || !s3Key || !fileSize) {
@@ -83,11 +74,7 @@ export const createNote = async (req: AuthRequest, res: Response): Promise<void>
         return;
       }
       
-      // Verify s3Key belongs to this user (security check)
-      if (!s3Key.startsWith(`notes/${userId}/`)) {
-        res.status(403).json({ message: 'Invalid S3 key for this user' });
-        return;
-      }
+      // Skip ownership verification for testing
       
       const note = new Note({
         title,
@@ -95,7 +82,7 @@ export const createNote = async (req: AuthRequest, res: Response): Promise<void>
         classNumber,
         instructorName,
         quarter,
-        ownerId: req.user._id,
+        ownerId: userId, // Use string instead of ObjectId for testing
         s3Bucket: BUCKET_NAME,
         s3Key,
         fileSize
@@ -103,7 +90,7 @@ export const createNote = async (req: AuthRequest, res: Response): Promise<void>
       
       await note.save();
       
-      console.log(`Note created by user: ${req.user.ucsdEmail}, title: ${title}`);
+      console.log(`Note created (no auth), title: ${title}`);
       
       res.status(201).json({ 
         message: 'Note created successfully', 
@@ -125,17 +112,12 @@ export const createNote = async (req: AuthRequest, res: Response): Promise<void>
 // Get all notes for logged-in user
 export const getUserNotes = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-      if (!req.user) {
-        res.status(401).json({ message: 'User not authenticated' });
-        return;
-      }
-      
-      const userId = req.user._id;
-      const notes = await Note.find({ ownerId: userId })
+      // Get all notes for testing (no auth)
+      const notes = await Note.find({})
         .sort({ createdAt: -1 })
         .select('-__v');
       
-      console.log(`Retrieved ${notes.length} notes for user: ${req.user.ucsdEmail}`);
+      console.log(`Retrieved ${notes.length} notes (no auth)`);
       
       res.status(200).json({ 
         count: notes.length,
@@ -150,11 +132,6 @@ export const getUserNotes = async (req: AuthRequest, res: Response): Promise<voi
 // Get single note by ID
 export const getNoteById = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-      if (!req.user) {
-        res.status(401).json({ message: 'User not authenticated' });
-        return;
-      }
-      
       const { noteId } = req.params;
       const note = await Note.findById(noteId);
       
@@ -163,11 +140,7 @@ export const getNoteById = async (req: AuthRequest, res: Response): Promise<void
         return;
       }
       
-      // Check ownership
-      if (note.ownerId.toString() !== req.user._id.toString()) {
-        res.status(403).json({ message: 'Unauthorized access to this note' });
-        return;
-      }
+      // Skip ownership check for testing
       
       res.status(200).json({ note });
     } catch (error) {
@@ -179,11 +152,6 @@ export const getNoteById = async (req: AuthRequest, res: Response): Promise<void
 // Generate download URL
 export const getDownloadUrl = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-      if (!req.user) {
-        res.status(401).json({ message: 'User not authenticated' });
-        return;
-      }
-      
       const { noteId } = req.params;
       const note = await Note.findById(noteId);
       
@@ -192,11 +160,7 @@ export const getDownloadUrl = async (req: AuthRequest, res: Response): Promise<v
         return;
       }
       
-      // Check ownership
-      if (note.ownerId.toString() !== req.user._id.toString()) {
-        res.status(403).json({ message: 'Unauthorized access to this note' });
-        return;
-      }
+      // Skip ownership check for testing
       
       // Generate presigned URL for download
       const command = new GetObjectCommand({
@@ -206,7 +170,7 @@ export const getDownloadUrl = async (req: AuthRequest, res: Response): Promise<v
       
       const downloadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
       
-      console.log(`Generated download URL for user: ${req.user.ucsdEmail}, note: ${note.title}`);
+      console.log(`Generated download URL (no auth), note: ${note.title}`);
       
       res.status(200).json({ 
         downloadUrl,
@@ -223,11 +187,6 @@ export const getDownloadUrl = async (req: AuthRequest, res: Response): Promise<v
   // Delete them notes
 export const deleteNote = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-      if (!req.user) {
-        res.status(401).json({ message: 'User not authenticated' });
-        return;
-      }
-      
       const { noteId } = req.params;
       const note = await Note.findById(noteId);
       
@@ -236,11 +195,7 @@ export const deleteNote = async (req: AuthRequest, res: Response): Promise<void>
         return;
       }
       
-      // Check ownership
-      if (note.ownerId.toString() !== req.user._id.toString()) {
-        res.status(403).json({ message: 'Unauthorized access to this note' });
-        return;
-      }
+      // Skip ownership check for testing
       
       // Delete from S3 FIRST (before MongoDB)
       // If S3 fails, we still have the DB record to retry later
@@ -253,7 +208,7 @@ export const deleteNote = async (req: AuthRequest, res: Response): Promise<void>
       // Only delete from MongoDB if S3 deletion succeeded
       await note.deleteOne();
       
-      console.log(`Note deleted by user: ${req.user.ucsdEmail}, title: ${note.title}`);
+      console.log(`Note deleted (no auth), title: ${note.title}`);
 
 
       res.status(200).json({ message: 'Note deleted successfully' });
