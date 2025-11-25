@@ -744,5 +744,5 @@ If you found this guide helpful, consider improving it and submitting a PR to he
 
 ---
 
-**Last Updated:** November 2024  
+**Last Updated:** November 2025
 **Maintained by:** TritonScript Team
