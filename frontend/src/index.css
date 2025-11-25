@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.errorText {
+  color: #da6060;
+}
+
+.csesLogo {
+  max-height: 25vh;
+  max-width: 100%;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(245, 245, 245, 0.58);
+}

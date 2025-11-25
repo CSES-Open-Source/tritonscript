@@ -1,0 +1,19 @@
+{"uploadUrl":"https://triton-script-notes-bucket.s3.us-west-1.amazonaws.com/notes/testuser/Fall-2025/b61082bd-c177-41e5-8848-e9830f7289f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAU5FY6KSO4MEDL77G%2F20251125%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20251125T021252Z&X-Amz-Expires=900&X-Amz-Signature=7e246bbe26a56b4b406214f5c28fbba76c3ea14a478794cc81f3803a8802f97d&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA%3D%3D&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject","s3Key":"notes/testuser/Fall-2025/b61082bd-c177-41e5-8848-e9830f7289f4.pdf","expiresIn":900,"metadata":{"title":"Data Structures Notes - Week 5","className":"Computer Science and Engineering","classNumber":"100","quarter":"Fall 2025"}}
+
+
+curl -X PUT "https://triton-script-notes-bucket.s3.us-west-1.amazonaws.com/notes/testuser/Fall-2025/b61082bd-c177-41e5-8848-e9830f7289f4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAU5FY6KSO4MEDL77G%2F20251125%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20251125T021252Z&X-Amz-Expires=900&X-Amz-Signature=7e246bbe26a56b4b406214f5c28fbba76c3ea14a478794cc81f3803a8802f97d&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA%3D%3D&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject" \
+  -H "Content-Type: application/pdf" \
+  --upload-file /Users/johnslee/tritonscript/cse100-notes.pdf
+
+
+# creating a note
+curl -X POST http://localhost:5005/api/notes/create \
+-H "Content-Type: application/json" \
+-d '{"title":"Data Structures Notes - Week 5","className":"Computer Science and Engineering","classNumber":"100","quarter":"Fall 2025", "s3Key": "cse100-notes.pdf", "fileSize": 30000}'
+
+# success response 
+{"message":"Note created successfully","note":{"title":"Data Structures Notes - Week 5","className":"Computer Science and Engineering","classNumber":"100","quarter":"Fall 2025","ownerId":"testuser","s3Bucket":"triton-script-notes-bucket","s3Key":"cse100-notes.pdf","fileSize":30000,"_id":"692512ed11fbff1c584e48aa","createdAt":"2025-11-25T02:22:37.769Z","updatedAt":"2025-11-25T02:22:37.769Z","__v":0}}%  
+
+
+# download url
+{"downloadUrl":"https://triton-script-notes-bucket.s3.us-west-1.amazonaws.com/cse100-notes.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAU5FY6KSO4MEDL77G%2F20251125%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20251125T022421Z&X-Amz-Expires=3600&X-Amz-Signature=e39457e87e6dcd1c0d154b3b8fe8be24048d31fc96a85d5b533e94ca237d2b75&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject","expiresIn":3600,"fileName":"Data Structures Notes - Week 5.pdf"}%    
