@@ -24,10 +24,12 @@ Before you begin, make sure you have the following installed and configured:
 ### Required Software
 
 - **Node.js** (v16 or higher)
+
   - Check: `node --version`
   - Download: https://nodejs.org/
 
 - **npm** (comes with Node.js)
+
   - Check: `npm --version`
 
 - **Git**
@@ -37,6 +39,7 @@ Before you begin, make sure you have the following installed and configured:
 ### Required Services
 
 - **MongoDB** (Database)
+
   - Option A: Local installation
   - Option B: MongoDB Atlas (cloud, recommended for beginners)
 
@@ -81,6 +84,7 @@ npm install
 ```
 
 This will install:
+
 - Express.js (web framework)
 - Mongoose (MongoDB ODM)
 - AWS SDK (for S3)
@@ -97,17 +101,20 @@ You have two options for MongoDB:
 #### Option A: MongoDB Atlas (Recommended for Beginners)
 
 1. **Create a free MongoDB Atlas account:**
+
    - Go to https://www.mongodb.com/cloud/atlas
    - Sign up for a free account
    - Create a new cluster (choose the free tier)
 
 2. **Configure database access:**
+
    - Click "Database Access" in the left sidebar
    - Click "Add New Database User"
    - Create a username and password (save these!)
    - Set privileges to "Read and write to any database"
 
 3. **Configure network access:**
+
    - Click "Network Access" in the left sidebar
    - Click "Add IP Address"
    - For development, click "Allow Access from Anywhere" (0.0.0.0/0)
@@ -122,6 +129,7 @@ You have two options for MongoDB:
    - Add `/tritonscript` at the end to specify the database name
 
 **Example connection string:**
+
 ```
 mongodb+srv://myuser:mypassword@cluster0.abc123.mongodb.net/tritonscript
 ```
@@ -129,23 +137,26 @@ mongodb+srv://myuser:mypassword@cluster0.abc123.mongodb.net/tritonscript
 #### Option B: Local MongoDB Installation
 
 1. **Install MongoDB:**
+
    - **macOS:** `brew install mongodb-community`
    - **Windows:** Download from https://www.mongodb.com/try/download/community
    - **Linux:** Follow instructions at https://docs.mongodb.com/manual/administration/install-on-linux/
 
 2. **Start MongoDB:**
+
    ```bash
    # macOS (with Homebrew)
    brew services start mongodb-community
-   
+
    # Linux
    sudo systemctl start mongod
-   
+
    # Windows
    # MongoDB should start automatically as a service
    ```
 
 3. **Verify MongoDB is running:**
+
    ```bash
    # Try connecting with mongosh
    mongosh
@@ -173,16 +184,13 @@ AWS S3 is used to store uploaded PDF files. **Good news!** Our teammate **Kabir*
 1. LOGIN W THIS:
    - **IAM Username** (for logging into AWS Console)
    - **IAM Password** (for logging into AWS Console)
-   - **S3 Bucket Name** (usually `tritonscript-notebucket`)
+   - **S3 Bucket Name** (usually `triton-script-notes-bucket`)
    - **AWS Region** (usually `us-west-1`)
-
-
 
 #### 4.2: Log into AWS Console
 
 1. **Go to AWS Console:**
    - Navigate to https://console.aws.amazon.com/
-   
 2. **Sign in as IAM user:**
    - Select "IAM user"
    - Enter the **IAM username** Kabir provided
@@ -194,10 +202,12 @@ AWS S3 is used to store uploaded PDF files. **Good news!** Our teammate **Kabir*
 Once logged into the AWS Console, you need to create your own access keys for the backend code:
 
 1. **Navigate to Security Credentials:**
+
    - Click on your **username** in the top-right corner
    - Select "**Security credentials**" from the dropdown
 
 2. **Create Access Keys:**
+
    - Scroll down to the "**Access keys**" section
    - Click "**Create access key**"
    - Select "**Application running outside AWS**" or "**Local code**"
@@ -211,12 +221,14 @@ Once logged into the AWS Console, you need to create your own access keys for th
    - Download the CSV file as a backup (store it securely, NOT in the repo)
 
 **Your credentials will look like:**
+
 - **Access Key ID:** Starts with `AKIA...` (e.g., `AKIAIOSFODNN7EXAMPLE`)
 - **Secret Access Key:** Long random string (e.g., `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`)
 
 #### Important Notes
 
 ⚠️ **Security Reminders:**
+
 - **Never commit these credentials** to Git or share them publicly
 - **Keep them in your `.env` file only** (which is gitignored)
 - **Don't share screenshots** of your `.env` file
@@ -224,6 +236,7 @@ Once logged into the AWS Console, you need to create your own access keys for th
 - If your keys are compromised, you can delete them and create new ones
 
 💡 **Why This Setup?**
+
 - The IAM username/password is shared among the team (for AWS Console access)
 - But each developer creates their own access keys (for code/API access)
 - This way, if someone's keys get compromised, only their keys need to be revoked
@@ -235,11 +248,13 @@ Once logged into the AWS Console, you need to create your own access keys for th
 ### Step 5: Configure Environment Variables
 
 1. **Copy the example environment file:**
+
    ```bash
    cp .env.example .env
    ```
 
 2. **Open the `.env` file in your text editor:**
+
    ```bash
    # Use your preferred editor
    code .env        # VS Code
@@ -253,22 +268,21 @@ Once logged into the AWS Console, you need to create your own access keys for th
    # Server Configuration
    PORT=5005
    NODE_ENV=development
-   
+
    # Database Configuration
    MONGO_URI=mongodb://localhost:27017/tritonscript
    # OR for MongoDB Atlas:
    # MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/tritonscript
-   
+
    # AWS S3 Configuration (Get these from Kabir or team documentation)
    AWS_ACCESS_KEY_ID=AKIA...get_from_kabir
    AWS_SECRET_ACCESS_KEY=wJalr...get_from_kabir
    AWS_REGION=us-west-1
-   S3_BUCKET_NAME=tritonscript-notebucket
-   
+   S3_BUCKET_NAME=triton-script-notes-bucket
+
    # CORS Configuration
    FRONTEND_URL=http://localhost:5173
    ```
-
 
 ---
 
@@ -281,11 +295,13 @@ npm run dev
 ```
 
 **What this does:**
+
 - Starts the server using `nodemon`
 - Automatically restarts when you make code changes
 - Runs TypeScript files directly with `ts-node`
 
 **Expected output:**
+
 ```
 [nodemon] starting `ts-node src/server.ts`
 Connected to MongoDB successfully
@@ -311,6 +327,7 @@ Once your backend is running, test these endpoints to make sure everything works
 ### 1. Check if the server is running
 
 Open your browser and go to:
+
 ```
 http://localhost:5005
 ```
@@ -320,6 +337,7 @@ You should see a response (might be a simple message or JSON).
 ### 2. Check MongoDB connection
 
 Look at your terminal where the backend is running. You should see:
+
 ```
 Connected to MongoDB successfully
 Server running on http://localhost:5005
@@ -355,6 +373,7 @@ curl -X POST http://localhost:5005/api/notes/get-upload-url \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "uploadUrl": "https://tritonscript-notebucket.s3.us-west-1.amazonaws.com/...",
@@ -379,6 +398,7 @@ curl -X PUT "PASTE_UPLOAD_URL_HERE" \
 ```
 
 **Example:**
+
 ```bash
 curl -X PUT "https://tritonscript-notebucket.s3.us-west-1.amazonaws.com/notes/1234567890-cse100-notes.pdf?X-Amz-Algorithm=..." \
   -H "Content-Type: application/pdf" \
@@ -408,6 +428,7 @@ curl -X POST http://localhost:5005/api/notes/create \
 **Note:** Use the `fileId` from Step 1.1 as the `file_id` here!
 
 **Expected Response:**
+
 ```json
 {
   "message": "Note created successfully",
@@ -438,6 +459,7 @@ curl -X GET http://localhost:5005/api/notes
 ```
 
 **Expected Response:**
+
 ```json
 {
   "notes": [
@@ -463,6 +485,7 @@ curl -X GET http://localhost:5005/api/notes/1
 ```
 
 **Expected Response:**
+
 ```json
 {
   "note": {
@@ -488,6 +511,7 @@ curl -X GET http://localhost:5005/api/notes/1/download
 ```
 
 **Expected Response:**
+
 ```json
 {
   "downloadUrl": "https://tritonscript-notebucket.s3.us-west-1.amazonaws.com/notes/1234567890-cse100-notes.pdf?X-Amz-Algorithm=..."
@@ -505,6 +529,7 @@ curl -X DELETE http://localhost:5005/api/notes/1
 ```
 
 **Expected Response:**
+
 ```json
 {
   "message": "Note deleted successfully"
@@ -568,6 +593,7 @@ After running these tests, verify:
 **Problem:** Missing dependencies
 
 **Solution:**
+
 ```bash
 # Delete node_modules and package-lock.json
 rm -rf node_modules package-lock.json
@@ -585,6 +611,7 @@ npm install
 **Solutions:**
 
 **For local MongoDB:**
+
 ```bash
 # Check if MongoDB is running
 # macOS
@@ -595,6 +622,7 @@ brew services start mongodb-community
 ```
 
 **For MongoDB Atlas:**
+
 - Verify your connection string is correct
 - Check that your IP address is whitelisted
 - Verify username and password are correct
@@ -607,6 +635,7 @@ brew services start mongodb-community
 **Problem:** Missing or incorrect AWS credentials
 
 **Solutions:**
+
 - Double-check your `.env` file has `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 - Verify there are no extra spaces or quotes around the values
 - Make sure you copied the full access key (starts with `AKIA`)
@@ -619,6 +648,7 @@ brew services start mongodb-community
 **Problem:** Another process is using port 5005
 
 **Solution:**
+
 ```bash
 # Find what's using the port (macOS/Linux)
 lsof -i :5005
@@ -632,12 +662,12 @@ PORT=5006
 
 ---
 
-
 ### Issue 6: TypeScript compilation errors
 
 **Problem:** TypeScript type errors
 
 **Solution:**
+
 ```bash
 # Make sure you have TypeScript installed
 npm install -D typescript
@@ -653,37 +683,40 @@ npm run build
 
 ## 📚 Environment Variables Explained
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `PORT` | No | Server port number | `5005` |
-| `NODE_ENV` | No | Environment mode | `development` or `production` |
-| `MONGO_URI` | **Yes** | MongoDB connection string | `mongodb://localhost:27017/tritonscript` |
-| `AWS_ACCESS_KEY_ID` | **Yes** | AWS access key (from Kabir) | `AKIA...` |
-| `AWS_SECRET_ACCESS_KEY` | **Yes** | AWS secret key (from Kabir) | Long random string |
-| `AWS_REGION` | No | AWS region for S3 | `us-west-1` |
-| `S3_BUCKET_NAME` | **Yes** | S3 bucket name (from Kabir) | `tritonscript-notebucket` |
-| `FRONTEND_URL` | No | Frontend URL for CORS | `http://localhost:5173` |
+| Variable                | Required | Description                 | Example                                  |
+| ----------------------- | -------- | --------------------------- | ---------------------------------------- |
+| `PORT`                  | No       | Server port number          | `5005`                                   |
+| `NODE_ENV`              | No       | Environment mode            | `development` or `production`            |
+| `MONGO_URI`             | **Yes**  | MongoDB connection string   | `mongodb://localhost:27017/tritonscript` |
+| `AWS_ACCESS_KEY_ID`     | **Yes**  | AWS access key (from Kabir) | `AKIA...`                                |
+| `AWS_SECRET_ACCESS_KEY` | **Yes**  | AWS secret key (from Kabir) | Long random string                       |
+| `AWS_REGION`            | No       | AWS region for S3           | `us-west-1`                              |
+| `S3_BUCKET_NAME`        | **Yes**  | S3 bucket name (from Kabir) | `tritonscript-notebucket`                |
+| `FRONTEND_URL`          | No       | Frontend URL for CORS       | `http://localhost:5173`                  |
 
 ---
-
 
 Congratulations! Your backend is now running. Here's what to do next:
 
 ### 1. Set up the Frontend
+
 - Navigate to the `frontend` directory
 - Follow the frontend setup instructions in the main README
 
 ### 2. Explore the API
+
 - Check the API documentation (ask your team for the Notion link)
 - Try making API requests with Postman or curl
 - Test user registration and authentication
 
 ### 3. Start Contributing
+
 - Read `CONTRIBUTING.md` for development guidelines
 - Check the GitHub issues for tasks to work on
 - Join your team's communication channel
 
 ### 4. Learn the Codebase
+
 - **`src/models/`** - Database schemas (User, Note, etc.)
 - **`src/routes/`** - API endpoints
 - **`src/controllers/`** - Request handlers
