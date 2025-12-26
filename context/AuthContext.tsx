@@ -4,23 +4,27 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { account, databases, DATABASE_ID, PROFILES_COLLECTION_ID } from "@/lib/appwrite";
 import { ID, Models } from "appwrite";
 import { useRouter } from "next/navigation";
-import { OAuthProvider } from 'appwrite';
+import { OAuthProvider, Query } from 'appwrite';
 
 interface UserProfile {
     user_id: string;
     email: string;
     role: "viewer" | "pending" | "scribe" | "admin";
+    selected_courses: string[]; // array of course codes
 }
 
 interface AuthContextType {
     user: Models.User<Models.Preferences> | null;
     profile: UserProfile | null;
     loading: boolean;
+    refreshProfile: () => Promise<void>;
     login: () => void;
     logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
@@ -43,6 +47,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         router.push('/login');
         console.log("Logged out");
     };
+    const refreshProfile = async () => {
+        if (!user) return;
+        
+        try {
+          const response = await databases.listRows({
+            databaseId: process.env.NEXT_PUBLIC_DB_ID!,
+            tableId: process.env.NEXT_PUBLIC_PROFILES_COLLECTION_ID!,
+            queries: [Query.equal("user_id", user.$id)]
+          });
+          
+          if (response.rows.length > 0) {
+            setProfile(response.rows[0] as unknown as UserProfile);
+          }
+        } catch (error) {
+          console.error("Error refreshing profile:", error);
+        }
+      };
+      
 
     const checkUserStatus = async () => {
         try {
@@ -52,20 +74,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             // Try to get the user's profile from the database
             try {
-                const existingProfile = await databases.getDocument({
+                const existingProfile = await databases.getRow({
                     databaseId: DATABASE_ID,
-                    collectionId: PROFILES_COLLECTION_ID,
-                    documentId: currentUser.$id
+                    tableId: PROFILES_COLLECTION_ID,
+                    rowId: currentUser.$id
                 });
                 setProfile(existingProfile as unknown as UserProfile);
             } catch (err) {
                 console.log("User exists but no profile assigned");
 
                 // Create a new profile if one doesn't exist
-                const newProfile = await databases.createDocument({
+                const newProfile = await databases.createRow({
                     databaseId: DATABASE_ID,
-                    collectionId: PROFILES_COLLECTION_ID,
-                    documentId: currentUser.$id,
+                    tableId: PROFILES_COLLECTION_ID,
+                    rowId: currentUser.$id,
                     data: {
                         user_id: currentUser.$id,
                         email: currentUser.email,
@@ -87,9 +109,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         checkUserStatus();
     }, []);
+    
 
     return (
-        <AuthContext.Provider value={{ user, profile, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, profile, loading, refreshProfile, login, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     );
