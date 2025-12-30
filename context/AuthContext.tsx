@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     data: {
                         user_id: currentUser.$id,
                         email: currentUser.email,
-                        role: "viewer",
+                        role: "pending",
                     }
                 });
                 setProfile(newProfile as unknown as UserProfile);

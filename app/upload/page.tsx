@@ -85,6 +85,7 @@ export default function UploadPage() {
 
 
             // TODO: set success tate to true to show success message
+            setSuccess(true);
             console.log("Upload successful:", noteMetadata);
 
             // TODO: reset form fields
