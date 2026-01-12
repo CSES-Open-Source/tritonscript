@@ -1,0 +1,50 @@
+import "../../src/pages/Home.css";
+import { useEffect } from "react";
+
+export default function Home() {
+
+  useEffect(() => {
+    document.body.classList.add("home-background");
+    return () => {
+      document.body.classList.remove("home-background");
+    };
+  }, []);
+  return (
+    <div className="features-container">
+      <div className="title">
+        <h1 className="name">Share, learn, and interact</h1>
+        <h2 className="title-small">all in one place</h2>
+      </div>
+
+      <div>
+      <section className="key-features">
+        <div className="features-grid">
+          <div className="feature-card1">
+            <img className="card-tape" src="src/assets/tape2.png"/>
+            <p className="feature-text">
+              A central repository where students can share their class notes
+              and resources.
+            </p>
+          </div>
+          <div className="feature-card2">
+            <img className="card-tape" src="src/assets/tape2.png"/>
+            <p className="feature-text">
+              Accessible through both a mobile app and a web platform for
+              seamless usability.
+            </p>
+          </div>
+          <div className="feature-card3">
+            <img className="card-tape" src="src/assets/tape2.png"/>
+            <p className="feature-text">
+              Securely log in using your UCSD credentials to ensure the
+              authenticity of contributors.
+            </p>
+          </div>
+        </div>
+      </section>
+        {/* <button onClick={handleSignOut}>Sign out</button> */}
+      </div>
+      
+    </div>
+  );
+}
